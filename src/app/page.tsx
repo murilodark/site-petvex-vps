@@ -1,0 +1,65 @@
+import React, { useEffect } from "react";
+import { updateDocumentSeo } from "../lib/seo";
+import HeroSection from "../components/sections/HeroSection";
+import MetricsSection from "../components/sections/MetricsSection";
+import ProductDemoSection from "../components/sections/ProductDemoSection";
+import BenefitsSection from "../components/sections/BenefitsSection";
+import FeaturesSection from "../components/sections/FeaturesSection";
+import HowItWorksSection from "../components/sections/HowItWorksSection";
+import DifferentialsSection from "../components/sections/DifferentialsSection";
+import PricingSection from "../components/sections/PricingSection";
+import TestimonialsSection from "../components/sections/TestimonialsSection";
+import FaqSection from "../components/sections/FaqSection";
+import WhatsappSection from "../components/sections/WhatsappSection";
+import FinalCtaSection from "../components/sections/FinalCtaSection";
+
+interface HomePageProps {
+  onNavigate: (path: string) => void;
+  onOpenSignup?: (plan: any) => void;
+}
+
+export default function HomePage({ onNavigate, onOpenSignup }: HomePageProps) {
+  useEffect(() => {
+    updateDocumentSeo();
+  }, []);
+
+  return (
+    <div className="relative">
+      {/* 1. HeroSection with product introduction */}
+      <HeroSection onNavigate={onNavigate} />
+
+      {/* 2. MetricsSection for social proof count */}
+      <MetricsSection />
+
+      {/* 3. ProductDemoSection showing interactive walkthroughs */}
+      <ProductDemoSection />
+
+      {/* 4. BenefitsSection showing core value propositions */}
+      <BenefitsSection />
+
+      {/* 5. FeaturesSection displaying primary tool columns */}
+      <FeaturesSection onNavigate={onNavigate} />
+
+      {/* 6. HowItWorksSection showing implementation timing */}
+      <HowItWorksSection />
+
+      {/* 7. DifferentialsSection showing our special edges */}
+      <DifferentialsSection />
+
+      {/* 8. PricingSection detailing plans */}
+      <PricingSection onOpenSignup={onOpenSignup} />
+
+      {/* 9. TestimonialsSection detailing user results */}
+      <TestimonialsSection />
+
+      {/* 10. FaqSection showing answers to doubts */}
+      <FaqSection />
+
+      {/* 11. WhatsappSection providing quick channels */}
+      <WhatsappSection />
+
+      {/* 12. FinalCtaSection sealing the conversion */}
+      <FinalCtaSection onNavigate={onNavigate} />
+    </div>
+  );
+}

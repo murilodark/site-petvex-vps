@@ -1,0 +1,6 @@
+{
+  "name": "Petvex",
+  "description": "Petvex é uma plataforma SaaS para pet shops, clínicas veterinárias, banho e tosa e negócios pet organizarem clientes, pets, agenda, vacinas, estoque, vendas, financeiro, relatórios e operação diária em um sistema moderno, simples e escalável.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
