@@ -4,6 +4,7 @@ import { X, Check, ArrowRight, ShieldCheck, User, CreditCard, Phone, Mail, Lock,
 import { ClientRegisterInput } from "../types/client";
 import { validateClientRegister, formatCPF, formatCNPJ, formatPhone, ValidationError } from "../schemas/client.schema";
 import { registerClient } from "../services/client.service";
+import { TermsOfServiceContent } from "../../../components/shared/TermsOfServiceContent";
 
 interface ClientSignupModalProps {
   isOpen: boolean;
@@ -32,6 +33,9 @@ export const ClientSignupModal: React.FC<ClientSignupModalProps> = ({
     email: "",
     password: "",
   });
+
+  const [acceptedTerms, setAcceptedTerms] = useState(false);
+  const [showTermsModal, setShowTermsModal] = useState(false);
 
   const [errors, setErrors] = useState<ValidationError>({});
   const [apiError, setApiError] = useState<string | null>(null);
@@ -72,6 +76,10 @@ export const ClientSignupModal: React.FC<ClientSignupModalProps> = ({
     setApiError(null);
 
     const validationErrors = validateClientRegister(formData, isEmpresa);
+    if (!acceptedTerms) {
+      validationErrors.terms = "Você precisa aceitar os Termos de Serviço para continuar.";
+    }
+
     if (Object.keys(validationErrors).length > 0) {
       setErrors(validationErrors);
       return;
@@ -407,6 +415,44 @@ export const ClientSignupModal: React.FC<ClientSignupModalProps> = ({
                   )}
                 </div>
 
+                {/* Checkbox de Aceite dos Termos */}
+                <div className="pt-2 select-none">
+                  <label className="flex items-start gap-2.5 cursor-pointer">
+                    <input
+                      type="checkbox"
+                      checked={acceptedTerms}
+                      onChange={(e) => {
+                        setAcceptedTerms(e.target.checked);
+                        if (e.target.checked && errors.terms) {
+                          setErrors((prev) => ({ ...prev, terms: undefined }));
+                        }
+                      }}
+                      disabled={isLoading}
+                      className="mt-0.5 h-4 w-4 rounded border-slate-300 text-emerald-600 focus:ring-emerald-550/20 focus:ring-2 cursor-pointer transition"
+                    />
+                    <span className="text-xs text-slate-600 leading-normal">
+                      Li e aceito os{" "}
+                      <button
+                        type="button"
+                        onClick={(e) => {
+                          e.preventDefault();
+                          e.stopPropagation();
+                          setShowTermsModal(true);
+                        }}
+                        className="text-emerald-600 font-bold hover:underline bg-transparent border-none p-0 inline focus:outline-none cursor-pointer align-baseline"
+                      >
+                        Termos de Serviço
+                      </button>
+                      .
+                    </span>
+                  </label>
+                  {errors.terms && (
+                    <p className="text-[10px] text-rose-600 font-semibold mt-1 flex items-center gap-1">
+                      <AlertCircle size={10} /> {errors.terms}
+                    </p>
+                  )}
+                </div>
+
                 {/* Submit button */}
                 <button
                   type="submit"
@@ -492,6 +538,58 @@ export const ClientSignupModal: React.FC<ClientSignupModalProps> = ({
               </button>
             </div>
           )}
+
+          {/* Nested Terms of Service Modal */}
+          <AnimatePresence>
+            {showTermsModal && (
+              <div className="absolute inset-0 z-40 flex items-center justify-center p-2 sm:p-4 bg-slate-950/40 backdrop-blur-xs rounded-3xl overflow-hidden">
+                <motion.div
+                  initial={{ opacity: 0, scale: 0.95, y: 30 }}
+                  animate={{ opacity: 1, scale: 1, y: 0 }}
+                  exit={{ opacity: 0, scale: 0.95, y: 30 }}
+                  transition={{ type: "spring", duration: 0.4 }}
+                  className="relative w-full h-full bg-white rounded-2xl flex flex-col overflow-hidden shadow-2xl border border-slate-100"
+                >
+                  {/* Modal Header */}
+                  <div className="p-5 border-b border-slate-100 flex items-center justify-between bg-slate-50/50 shrink-0">
+                    <span className="font-display font-black text-base text-slate-900">
+                      Termos de Serviço
+                    </span>
+                    <button
+                      type="button"
+                      onClick={() => setShowTermsModal(false)}
+                      className="p-2 rounded-full text-slate-400 hover:text-slate-600 hover:bg-slate-100 transition focus:outline-none"
+                      aria-label="Fechar Termos"
+                    >
+                      <X size={18} />
+                    </button>
+                  </div>
+
+                  {/* Modal Content */}
+                  <div className="p-6 overflow-y-auto flex-1 scrollbar-thin pb-12">
+                    <TermsOfServiceContent />
+                  </div>
+
+                  {/* Modal Footer */}
+                  <div className="p-4 border-t border-slate-100 flex justify-end bg-slate-50/50 shrink-0">
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setAcceptedTerms(true);
+                        setShowTermsModal(false);
+                        if (errors.terms) {
+                          setErrors((prev) => ({ ...prev, terms: undefined }));
+                        }
+                      }}
+                      className="bg-emerald-600 hover:bg-emerald-700 text-white font-display font-bold text-xs py-2.5 px-5 rounded-xl transition-all shadow-md shadow-emerald-600/10 cursor-pointer"
+                    >
+                      Aceitar Termos
+                    </button>
+                  </div>
+                </motion.div>
+              </div>
+            )}
+          </AnimatePresence>
         </motion.div>
       </div>
     </AnimatePresence>

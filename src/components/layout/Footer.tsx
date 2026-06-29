@@ -2,6 +2,8 @@ import React from "react";
 import { siteConfig } from "../../config/site.config";
 import { getWhatsappLink } from "../../lib/whatsapp";
 import { Mail, Phone, Clock, MapPin, Instagram, Facebook, Youtube } from "lucide-react";
+// @ts-ignore
+import logoImg from "../../assets/images/logo.png";
 
 interface FooterProps {
   onNavigate: (path: string) => void;
@@ -30,9 +32,12 @@ export const Footer: React.FC<FooterProps> = ({ onNavigate }) => {
               onClick={(e) => handleLinkClick(e, "/")}
               className="flex items-center gap-2"
             >
-              <div className="w-9 h-9 rounded-xl bg-emerald-500 flex items-center justify-center text-white font-bold text-lg">
-                🐾
-              </div>
+              <img
+                src={logoImg}
+                alt="Petvex Logo"
+                className="w-9 h-9 object-contain"
+                referrerPolicy="no-referrer"
+              />
               <span className="font-display font-extrabold text-xl text-white leading-none">
                 Petvex
               </span>

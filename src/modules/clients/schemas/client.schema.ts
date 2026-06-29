@@ -8,6 +8,7 @@ export interface ValidationError {
   phone?: string;
   email?: string;
   password?: string;
+  terms?: string;
 }
 
 // CPF validation logic

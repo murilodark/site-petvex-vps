@@ -4,6 +4,8 @@ import { useScrollPosition } from "../../hooks/useScrollPosition";
 import { getWhatsappLink } from "../../lib/whatsapp";
 import { Button } from "../ui/Button";
 import { Menu, X, Rocket } from "lucide-react";
+// @ts-ignore
+import logoImg from "../../assets/images/logo.png";
 
 interface HeaderProps {
   currentPath: string;
@@ -40,9 +42,12 @@ export const Header: React.FC<HeaderProps> = ({ currentPath, onNavigate }) => {
             onClick={(e) => handleLinkClick(e, "/")}
             className="flex items-center gap-2.5 group"
           >
-            <div className="w-10 h-10 rounded-xl bg-emerald-600 flex items-center justify-center text-white font-bold text-xl shadow-lg shadow-emerald-500/20 group-hover:scale-105 transition-all duration-300">
-              🐾
-            </div>
+            <img
+              src={logoImg}
+              alt="Petvex Logo"
+              className="w-10 h-10 object-contain group-hover:scale-105 transition-all duration-300"
+              referrerPolicy="no-referrer"
+            />
             <div className="flex flex-col">
               <span className="font-display font-extrabold text-lg text-slate-900 leading-none tracking-tight">
                 Petvex
