@@ -153,8 +153,8 @@ export const PricingSection: React.FC<PricingSectionProps> = ({ onOpenSignup }) 
         {/* Header content Titles */}
         <SectionTitle
           badge="Planos e Preços"
-          title="Planos sob medida para o tamanho do seu sonho"
-          subtitle="Escolha o melhor plano para estruturar sua recepção, estética ou clínicas. Cancele ou altere quando quiser."
+          title="O plano perfeito para o momento do seu negócio"
+          subtitle="Sem taxas de adesão, sem surpresas e sem contratos de fidelidade. Escolha a melhor opção para simplificar sua rotina."
         />
 
         {/* Dynamic Billing Cycle Toggle */}

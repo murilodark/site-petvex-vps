@@ -174,19 +174,6 @@ export const Footer: React.FC<FooterProps> = ({ onNavigate }) => {
 
         </div>
 
-        {/* Trusted Partners Grid Block */}
-        <div className="border-t border-slate-800/60 mt-16 pt-10 pb-2 flex flex-col md:flex-row items-center justify-between gap-6">
-          <div className="text-xs font-display font-medium uppercase tracking-wider text-slate-500">
-            Confiado por parceiros do ecossistema pet brasileiro:
-          </div>
-          <div className="flex flex-wrap items-center gap-8 opacity-25 grayscale brightness-125 select-none font-display">
-            <span className="font-extrabold text-xl tracking-tighter text-white">PETZ</span>
-            <span className="font-black text-xl tracking-tight text-white">COBASI</span>
-            <span className="font-bold text-lg tracking-normal text-white">DOG.HERO</span>
-            <span className="font-black text-lg tracking-widest text-emerald-400">LOVEPET</span>
-          </div>
-        </div>
-
         {/* Bottom copyright alignment */}
         <div className="border-t border-slate-800/80 mt-8 pt-8 flex flex-col md:flex-row items-center justify-between gap-6 text-xs text-slate-500">
           <div className="flex flex-col gap-1.5 text-center md:text-left">

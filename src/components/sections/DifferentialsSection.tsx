@@ -18,8 +18,8 @@ export const DifferentialsSection: React.FC = () => {
         {/* Title details */}
         <SectionTitle
           badge="Nossos Diferenciais"
-          title="Por que somos a melhor escolha do varejo pet?"
-          subtitle="Mais do que um simples banco de dados. Somos a inteligência e o motor que aceleram a produtividade da sua operação diária."
+          title="Por que somos a escolha perfeita para você?"
+          subtitle="Mais do que um sistema, somos o parceiro do seu dia a dia que simplifica a gestão e devolve o seu tempo livre."
         />
 
         {/* Differentials Catalog columns */}

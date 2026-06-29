@@ -14,8 +14,8 @@ export const BenefitsSection: React.FC = () => {
         {/* Section title header */}
         <SectionTitle
           badge="Por que Petvex?"
-          title="Tudo o que você precisa para prosperar seu negócio pet"
-          subtitle="Agilize processos repetitivos, encante os tutores com lembretes inteligentes e mantenha o caixa em perfeito controle."
+          title="Simplifique sua rotina e tenha mais tempo para cuidar dos animais."
+          subtitle="Menos tempo com burocracia, mais tempo fazendo o que você ama. Criado especialmente para quem atende pets todos os dias."
         />
 
         {/* Benefits Grid list */}

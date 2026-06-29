@@ -2,8 +2,8 @@ import { SiteConfig, SeoMetadata } from "../types/site";
 
 export const siteConfig: SiteConfig = {
   name: "Petvex",
-  tagline: "O sistema mais completo e intuitivo para o seu negócio pet",
-  description: "Petvex é uma plataforma SaaS para pet shops, clínicas veterinárias, banho e tosa e negócios pet organizarem clientes, pets, agenda, vacinas, estoque, vendas, financeiro, relatórios e operação diária em um sistema moderno, simples e escalável.",
+  tagline: "Comece apenas com seu CPF • Não é necessário ter CNPJ",
+  description: "Petvex é uma plataforma SaaS para pequenos pet shops, consultórios veterinários, banho e tosa e profissionais autônomos organizarem clientes, pets, agenda, vacinas, estoque, vendas, financeiro, relatórios e operação diária em um sistema moderno, simples e focado no seu dia a dia.",
   logo: "/src/assets/images/logo.png",
   whatsappNumber: "5511999998888", // Formato internacional
   email: "contato@petvex.com.br",
@@ -19,18 +19,17 @@ export const siteConfig: SiteConfig = {
     { label: "Funcionalidades", href: "/funcionalidades" },
     { label: "Planos", href: "/planos" },
     { label: "Contato", href: "/contato" },
-    { label: "Solicitar Demonstração", href: "/demonstracao" }
   ],
   hero: {
-    headline: "Controle total do seu pet shop ou clínica veterinária em um só lugar.",
-    subheadline: "Organize sua agenda, simplifique o banho e tosa, gerencie planos vacinais, lance vendas e domine o seu financeiro com o sistema mais moderno do mercado brasileiro.",
-    ctaPrimary: "Teste grátis",
+    headline: "O sistema de gestão feito para Groomers, Veterinários e Pequenos Pet Shops.",
+    subheadline: "Organize sua agenda, clientes, pets, atendimentos, vendas, estoque e financeiro em uma única plataforma. Comece utilizando apenas seu CPF e atualize para CNPJ quando seu negócio crescer.",
+    ctaPrimary: "Começar com CPF",
     ctaSecondary: "Falar no WhatsApp"
   },
   metrics: [
-    { id: "m1", value: "98", suffix: "%", label: "De Satisfação Clientes" },
+    { id: "m1", value: "98", suffix: "%", label: "De Satisfação de Clientes" },
     { id: "m2", value: "3.5", suffix: "M+", label: "Pets Cadastrados" },
-    { id: "m3", value: "15", suffix: "k+", label: "Pet Shops & Clínicas Atendidas" },
+    { id: "m3", value: "15", suffix: "k+", label: "Groomers & Vets Atendidos" },
     { id: "m4", value: "40", suffix: "%", label: "Aumento em Produtividade" }
   ],
   benefits: [
@@ -99,7 +98,7 @@ export const siteConfig: SiteConfig = {
     {
       id: "f7",
       title: "Gestão Financeira & DRE",
-      description: "Contas a pagar e receber, fluxo de caixa real, conciliação bancária automática e relatórios estruturados de saúde corporativa.",
+      description: "Contas a pagar e receber, fluxo de caixa real, controle de despesas e relatórios simples de faturamento e lucros.",
       iconName: "DollarSign"
     },
     {
@@ -129,7 +128,7 @@ export const siteConfig: SiteConfig = {
     {
       id: "f12",
       title: "Upload de Imagens & Exames",
-      description: "Anexe imagens de laudos, radiografias, contratos assinados e fotos do pet no perfil corporativo instantaneamente do celular.",
+      description: "Anexe imagens de laudos, radiografias, contratos assinados e fotos do pet no cadastro instantaneamente do celular.",
       iconName: "UploadCloud"
     },
     {
@@ -239,7 +238,7 @@ export const siteConfig: SiteConfig = {
         "Acesso multiusuário ilimitado"
       ],
       recommended: false,
-      ctaText: "Solicitar demonstração",
+      ctaText: "Iniciar Gratuitamente",
       whatsappMessage: "Olá, quero conhecer o Petvex e entender como ele pode ajudar na gestão do meu negócio pet."
     }
   ],
@@ -297,17 +296,22 @@ export const siteConfig: SiteConfig = {
       id: "f5",
       question: "O sistema funciona em celular e tablet?",
       answer: "Perfeitamente! O Petvex é 100% responsivo e otimizado para navegadores de celulares, tablets e robôs de atendimento. Você ou sua equipe podem operar a agenda de qualquer lugar."
+    },
+    {
+      id: "f6",
+      question: "Preciso ter CNPJ para assinar o Petvex?",
+      answer: "De forma alguma! O Petvex foi criado pensando em quem está começando ou trabalha de forma autônoma. Você pode fazer o seu cadastro utilizando apenas o seu CPF. Se no futuro você formalizar o seu negócio e abrir um CNPJ, basta atualizar os dados no seu perfil em poucos segundos, sem perder nenhuma informação."
     }
   ],
   footer: {
-    about: "Petvex é uma plataforma SaaS para pet shops, clínicas veterinárias, banho e tosa e negócios pet organizarem clientes, pets, agenda, vacinas, estoque, vendas, financeiro, relatórios e operação diária em um sistema moderno, simples e escalável. Desenhado para modernizar pet shops, consultórios, hotéis e clínicas veterinárias.",
+    about: "Petvex é uma plataforma SaaS para pequenos pet shops, consultórios veterinários, banho e tosa e profissionais autônomos organizarem clientes, pets, agenda, vacinas, estoque, vendas, financeiro, relatórios e operação diária em um sistema moderno, simples e focado no seu dia a dia.",
     copyright: "© 2026 Petvex Tecnologia. Todos os direitos reservados."
   }
 };
 
 export const seoConfig: SeoMetadata = {
-  title: "Petvex - Sistema para Pet Shop e Clínica Veterinária",
-  description: "Petvex é uma plataforma SaaS para pet shops, clínicas veterinárias, banho e tosa e negócios pet organizarem clientes, pets, agenda, vacinas, estoque, vendas, financeiro, relatórios e operação diária em um sistema moderno, simples e escalável. Experimente grátis!",
+  title: "Petvex - Sistema para Banho e Tosa, Consultório e Pequeno Pet Shop",
+  description: "Petvex é uma plataforma SaaS para pequenos pet shops, consultórios veterinários, banho e tosa e profissionais autônomos organizarem clientes, pets, agenda, vacinas, estoque, vendas, financeiro e operação diária em um sistema simples e rápido. Experimente grátis!",
   keywords: [
     "sistema para pet shop",
     "software para pet shop",

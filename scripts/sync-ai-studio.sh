@@ -1,8 +1,9 @@
 #!/usr/bin/env bash
+#bash scripts/sync-ai-studio.sh
 set -euo pipefail
 
-AI_REPO="/home/murilo/Documentos/projetos/petvex/app-petvex-aistudio"
-TARGET_REPO="/home/murilo/Documentos/projetos/petvex/adm-petvex"
+AI_REPO="/home/murilo/Documentos/projetos/petvex/site-petvex-ai-studio"
+TARGET_REPO="/home/murilo/Documentos/projetos/petvex/site-petvex-vps"
 
 RSYNC_ARGS=(
   -avim

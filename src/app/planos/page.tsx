@@ -151,11 +151,12 @@ export default function PlansPage({ onOpenSignup }: PlansPageProps) {
             Valores Transparentes
           </span>
           <h1 className="text-3xl sm:text-5xl font-display font-black text-slate-900 mt-4 tracking-tight leading-tight">
-            Compare nossos planos e comece hoje
-          </h1>
-          <p className="mt-4 text-slate-600 text-sm sm:text-base leading-relaxed">
-            Sem pegadinhas, taxas de cancelamento ou comissão surpresa. Escolha a cobertura ideal e conte com nossa migração técnica de dados gratuita.
-          </p>
+  Crie sua conta gratuita e experimente o Petvex sem compromisso
+</h1>
+
+<p className="mt-4 text-slate-600 text-sm sm:text-base leading-relaxed">
+  Escolha o plano ideal para o seu negócio e aproveite o período de teste gratuito definido para cada plano. Seu ambiente é criado automaticamente em poucos segundos, sem cobrança durante a avaliação, para que você conheça a plataforma antes de contratar.
+</p>
         </div>
 
         {/* Dynamic Billing Cycle Toggle */}

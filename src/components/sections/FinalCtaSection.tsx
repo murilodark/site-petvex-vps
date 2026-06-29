@@ -26,12 +26,12 @@ export const FinalCtaSection: React.FC<FinalCtaSectionProps> = ({ onNavigate }) 
 
         {/* Headline */}
         <h2 className="text-3xl sm:text-5xl font-display font-black leading-tight tracking-tight max-w-2xl">
-          Pronto para modernizar seu pet shop ou clínica?
+          Pronto para simplificar sua rotina e focar nos animais?
         </h2>
 
         {/* Subhead details */}
         <p className="text-slate-400 text-base sm:text-lg max-w-xl leading-relaxed">
-          Assuma as rédeas do seu agendamento, reduza faltas de clientes e domine seu financeiro. Descubra nossos planos com ativação imediata.
+          Assuma as rédeas do seu agendamento, reduza as faltas dos tutores e tenha total controle do seu banho e tosa, consultório ou pequeno pet shop.
         </p>
 
         {/* Conversion Action Buttons */}
@@ -45,7 +45,7 @@ export const FinalCtaSection: React.FC<FinalCtaSectionProps> = ({ onNavigate }) 
             }}
             className="font-display font-extrabold text-sm tracking-wide gap-2 group py-4 cursor-pointer"
           >
-            Conhecer Nossos Planos
+            Começar Gratuitamente
             <ArrowRight size={18} className="transition-transform duration-300 group-hover:translate-x-0.5" />
           </Button>
 
@@ -56,7 +56,7 @@ export const FinalCtaSection: React.FC<FinalCtaSectionProps> = ({ onNavigate }) 
             className="inline-flex items-center justify-center font-display font-semibold transition border border-slate-800 py-4 hover:bg-slate-800 text-slate-200 px-6 rounded-xl hover:text-white"
           >
             <MessageCircle size={18} className="mr-2 text-emerald-400" />
-            Agendar Reunião VIP
+            Falar pelo WhatsApp
           </a>
         </div>
 

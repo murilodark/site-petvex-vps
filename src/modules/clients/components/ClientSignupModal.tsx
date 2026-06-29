@@ -132,13 +132,13 @@ export const ClientSignupModal: React.FC<ClientSignupModalProps> = ({
           animate={{ opacity: 1, scale: 1, y: 0 }}
           exit={{ opacity: 0, scale: 0.95, y: 15 }}
           transition={{ type: "spring", duration: 0.5 }}
-          className="relative w-full max-w-lg bg-white rounded-3xl shadow-2xl overflow-hidden border border-slate-100 z-10"
+          className="relative w-full max-w-lg bg-white rounded-3xl shadow-2xl border border-slate-100 z-10 my-auto max-h-[calc(100dvh-2rem)] flex flex-col overflow-hidden"
         >
           {/* Header Close Button */}
           {!isLoading && (
             <button
               onClick={onClose}
-              className="absolute top-5 right-5 p-2 rounded-full text-slate-400 hover:text-slate-600 hover:bg-slate-100 transition focus:outline-none"
+              className="absolute top-5 right-5 p-2 rounded-full text-slate-400 hover:text-slate-600 hover:bg-slate-100 transition focus:outline-none z-20"
               aria-label="Fechar"
             >
               <X size={18} />
@@ -147,7 +147,7 @@ export const ClientSignupModal: React.FC<ClientSignupModalProps> = ({
 
           {!isSuccess ? (
             /* --- REGISTRATION FORM --- */
-            <div className="p-6 sm:p-8">
+            <div className="p-6 sm:p-8 overflow-y-auto flex-1 pb-16 sm:pb-8 scrollbar-thin">
               {/* Header metadata */}
               <div className="mb-6">
                 <span
@@ -432,7 +432,7 @@ export const ClientSignupModal: React.FC<ClientSignupModalProps> = ({
             </div>
           ) : (
             /* --- SUCCESS CONFIRMATION SCREEN --- */
-            <div className="p-6 sm:p-8 text-center flex flex-col items-center">
+            <div className="p-6 sm:p-8 text-center flex flex-col items-center overflow-y-auto flex-1 pb-16 sm:pb-8 scrollbar-thin">
               {/* Checkmark animation */}
               <motion.div
                 initial={{ scale: 0 }}

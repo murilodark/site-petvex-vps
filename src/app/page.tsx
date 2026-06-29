@@ -1,6 +1,7 @@
 import React, { useEffect } from "react";
 import { updateDocumentSeo } from "../lib/seo";
 import HeroSection from "../components/sections/HeroSection";
+import StartingBusinessSection from "../components/sections/StartingBusinessSection";
 import MetricsSection from "../components/sections/MetricsSection";
 import ProductDemoSection from "../components/sections/ProductDemoSection";
 import BenefitsSection from "../components/sections/BenefitsSection";
@@ -27,6 +28,9 @@ export default function HomePage({ onNavigate, onOpenSignup }: HomePageProps) {
     <div className="relative">
       {/* 1. HeroSection with product introduction */}
       <HeroSection onNavigate={onNavigate} />
+
+      {/* 1b. Section for starting businesses with CPF */}
+      <StartingBusinessSection />
 
       {/* 2. MetricsSection for social proof count */}
       <MetricsSection />

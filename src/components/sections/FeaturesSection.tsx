@@ -22,9 +22,9 @@ export const FeaturesSection: React.FC<FeaturesSectionProps> = ({ onNavigate }) 
         
         {/* Header content title */}
         <SectionTitle
-          badge="Funcionalidades Premium"
-          title="Tudo em um só lugar. Esqueça as anotações em papel."
-          subtitle="Desenvolvemos telas intuitivas voltadas para a produtividade da recepção, dos cuidadores e dos veterinários."
+          badge="Funcionalidades Completas"
+          title="Tudo em um só lugar. Esqueça as anotações em papel e planilhas."
+          subtitle="Uma plataforma simples e rápida, pensada para simplificar sua rotina. Tenha mais tempo para cuidar dos animais e gaste menos tempo com burocracia."
         />
 
         {/* Feature widgets grid list */}

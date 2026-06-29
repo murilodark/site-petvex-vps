@@ -7,7 +7,7 @@ import { Container } from "../ui/Container";
 import { GradientBlob } from "../ui/GradientBlob";
 import { MockupBrowser } from "../ui/MockupBrowser";
 import { DashboardPreview } from "../shared/DashboardPreview";
-import { MessageCircle, PlayCircle, ShieldCheck } from "lucide-react";
+import { MessageCircle, PlayCircle, ShieldCheck, Check } from "lucide-react";
 
 interface HeroSectionProps {
   onNavigate: (path: string) => void;
@@ -70,7 +70,7 @@ export const HeroSection: React.FC<HeroSectionProps> = ({ onNavigate }) => {
               <Button
                 variant="primary"
                 size="lg"
-                onClick={() => onNavigate("/demonstracao")}
+                onClick={() => onNavigate("/planos")}
                 className="font-display font-bold text-sm tracking-wide px-8 py-3.5 rounded-full shadow-xl shadow-emerald-500/15 hover:shadow-emerald-500/30 group"
               >
                 {siteConfig.hero.ctaPrimary}
@@ -92,7 +92,7 @@ export const HeroSection: React.FC<HeroSectionProps> = ({ onNavigate }) => {
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               transition={{ duration: 0.5, delay: 0.4 }}
-              className="flex items-center gap-5 mt-4 text-xs text-slate-500"
+              className="flex items-center gap-5 mt-1 text-xs text-slate-500"
             >
               <div className="flex items-center gap-1.5">
                 <ShieldCheck size={16} className="text-emerald-500" />
@@ -102,6 +102,36 @@ export const HeroSection: React.FC<HeroSectionProps> = ({ onNavigate }) => {
               <div>Sem cartão de crédito</div>
               <span>•</span>
               <div>Suporte VIP</div>
+            </motion.div>
+
+            {/* Visual Highlight Card: Start with CPF */}
+            <motion.div
+              initial={{ opacity: 0, y: 15 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5, delay: 0.5 }}
+              className="mt-2 p-5 bg-gradient-to-br from-white to-slate-50 border border-emerald-500/15 rounded-2xl shadow-md shadow-emerald-500/5 relative overflow-hidden"
+            >
+              {/* Subtle top decoration */}
+              <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-emerald-500 to-teal-400"></div>
+              
+              <h3 className="text-sm font-bold text-slate-900 font-display flex items-center gap-2 mb-3">
+                <span className="flex h-5 w-5 rounded-full bg-emerald-100 text-emerald-600 items-center justify-center text-xs font-black">✓</span>
+                Você não precisa ter CNPJ para começar.
+              </h3>
+              <ul className="space-y-2">
+                {[
+                  "Cadastre-se utilizando apenas seu CPF.",
+                  "Ideal para groomers e veterinários autônomos.",
+                  "Organize seu negócio desde o primeiro cliente.",
+                  "Quando abrir sua empresa, basta atualizar seu cadastro.",
+                  "Sem burocracia."
+                ].map((item, index) => (
+                  <li key={index} className="flex items-start gap-2 text-xs text-slate-600 font-sans leading-normal">
+                    <Check size={14} className="text-emerald-500 mt-0.5 shrink-0" />
+                    <span>{item}</span>
+                  </li>
+                ))}
+              </ul>
             </motion.div>
 
           </div>
