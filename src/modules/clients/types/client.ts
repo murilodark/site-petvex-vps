@@ -1,11 +1,12 @@
 export interface ClientRegisterInput {
-  name: string;
+  tenant_name: string;
+  account_slug?: string;
+  user_name: string;
   cpf: string;
-  cnpj?: string | null;
   phone: string;    // Celular
   email: string;
   password: string;
-  password_confirmation?: string;
+  password_confirmation: string;
   plan_id?: number;
 }
 

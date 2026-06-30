@@ -3,21 +3,27 @@ import { ClientRegisterInput, ClientRegisterResponse } from "../types/client";
 const API_BASE_URL = "https://api.petvex.com.br/api/v1";
 
 export async function registerClient(input: ClientRegisterInput): Promise<ClientRegisterResponse> {
-  // Map fields to match the new /public/new-client API requirements
+  const cleanCpf = input.cpf.replace(/\D/g, "");
+  const cleanPhone = input.phone.replace(/\D/g, "");
+  
+  // Sanitizar account_slug: lowercase, sem acentos, sem espaços, sem caracteres especiais
+  const cleanSlug = (input.account_slug || "")
+    .toLowerCase()
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .replace(/[^a-z0-9]/g, "");
+
   const payload: any = {
-    name: input.name,
+    tenant_name: input.tenant_name,
+    account_slug: cleanSlug,
+    user_name: input.user_name,
+    cpf: cleanCpf,
+    phone: cleanPhone,
     email: input.email,
-    phone: input.phone,
-    cpf: input.cpf,
     password: input.password,
-    password_confirmation: input.password_confirmation || input.password,
+    password_confirmation: input.password_confirmation,
     plan_id: input.plan_id
   };
-
-  // Only send CNPJ if it is provided
-  if (input.cnpj) {
-    payload.cnpj = input.cnpj;
-  }
 
   const response = await fetch(`${API_BASE_URL}/public/new-client`, {
     method: "POST",

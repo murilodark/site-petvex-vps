@@ -24,16 +24,18 @@ export const ClientSignupModal: React.FC<ClientSignupModalProps> = ({
   onClose,
   selectedPlan,
 }) => {
-  const [isEmpresa, setIsEmpresa] = useState(false);
   const [formData, setFormData] = useState<Partial<ClientRegisterInput>>({
-    name: "",
+    tenant_name: "",
+    account_slug: "",
+    user_name: "",
     cpf: "",
-    cnpj: "",
     phone: "",
     email: "",
     password: "",
+    password_confirmation: "",
   });
 
+  const [isSlugManuallyEdited, setIsSlugManuallyEdited] = useState(false);
   const [acceptedTerms, setAcceptedTerms] = useState(false);
   const [showTermsModal, setShowTermsModal] = useState(false);
 
@@ -44,14 +46,44 @@ export const ClientSignupModal: React.FC<ClientSignupModalProps> = ({
 
   if (!isOpen || !selectedPlan) return null;
 
+  const generateSlug = (text: string): string => {
+    return text
+      .toLowerCase()
+      .normalize("NFD")
+      .replace(/[\u0300-\u036f]/g, "") // remove acentos
+      .replace(/[^a-z0-9]/g, "");     // apenas letras minúsculas e números
+  };
+
+  const handleTenantNameChange = (val: string) => {
+    setFormData((prev) => {
+      const updated = { ...prev, tenant_name: val };
+      if (!isSlugManuallyEdited) {
+        updated.account_slug = generateSlug(val);
+      }
+      return updated;
+    });
+
+    if (errors.tenant_name) {
+      setErrors((prev) => ({ ...prev, tenant_name: undefined }));
+    }
+  };
+
+  const handleSlugChange = (val: string) => {
+    const sanitizedVal = val.toLowerCase().replace(/[^a-z0-9]/g, "");
+    setIsSlugManuallyEdited(true);
+    setFormData((prev) => ({ ...prev, account_slug: sanitizedVal }));
+
+    if (errors.account_slug) {
+      setErrors((prev) => ({ ...prev, account_slug: undefined }));
+    }
+  };
+
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     let formattedValue = value;
 
     if (name === "cpf") {
       formattedValue = formatCPF(value);
-    } else if (name === "cnpj") {
-      formattedValue = formatCNPJ(value);
     } else if (name === "phone") {
       formattedValue = formatPhone(value);
     }
@@ -75,7 +107,7 @@ export const ClientSignupModal: React.FC<ClientSignupModalProps> = ({
     e.preventDefault();
     setApiError(null);
 
-    const validationErrors = validateClientRegister(formData, isEmpresa);
+    const validationErrors = validateClientRegister(formData);
     if (!acceptedTerms) {
       validationErrors.terms = "Você precisa aceitar os Termos de Serviço para continuar.";
     }
@@ -89,12 +121,14 @@ export const ClientSignupModal: React.FC<ClientSignupModalProps> = ({
 
     try {
       await registerClient({
-        name: formData.name!,
+        tenant_name: formData.tenant_name!,
+        account_slug: formData.account_slug,
+        user_name: formData.user_name!,
         cpf: formData.cpf!.replace(/\D/g, ""),
-        cnpj: isEmpresa && formData.cnpj ? formData.cnpj.replace(/\D/g, "") : null,
         phone: formData.phone!.replace(/\D/g, ""),
         email: formData.email!,
         password: formData.password!,
+        password_confirmation: formData.password_confirmation!,
         plan_id: selectedPlan.id,
       });
 
@@ -107,7 +141,11 @@ export const ClientSignupModal: React.FC<ClientSignupModalProps> = ({
         Object.keys(err.errors).forEach((key) => {
           const messages = err.errors[key];
           if (Array.isArray(messages) && messages.length > 0) {
-            newErrors[key as keyof ValidationError] = messages[0];
+            if (key === "account_slug") {
+              newErrors.account_slug = "Este endereço já está em uso. Escolha outro.";
+            } else {
+              newErrors[key as keyof ValidationError] = messages[0];
+            }
           }
         });
         setErrors(newErrors);
@@ -186,10 +224,10 @@ export const ClientSignupModal: React.FC<ClientSignupModalProps> = ({
 
               {/* Form elements */}
               <form onSubmit={handleSubmit} className="space-y-4">
-                {/* Nome completo ou Razão Social */}
+                {/* Nome do estabelecimento */}
                 <div>
                   <label className="block text-slate-700 text-xs font-bold uppercase tracking-wider mb-1.5">
-                    {isEmpresa ? "Razão Social / Nome da Empresa" : "Nome Completo"}
+                    Nome do estabelecimento
                   </label>
                   <div className="relative">
                     <span className="absolute inset-y-0 left-0 pl-3.5 flex items-center text-slate-400">
@@ -197,103 +235,104 @@ export const ClientSignupModal: React.FC<ClientSignupModalProps> = ({
                     </span>
                     <input
                       type="text"
-                      name="name"
-                      value={formData.name || ""}
-                      onChange={handleInputChange}
-                      placeholder={isEmpresa ? "Ex: Pet Shop Amigo Fiel Ltda" : "Ex: Carlos Alberto Silva"}
+                      name="tenant_name"
+                      value={formData.tenant_name || ""}
+                      onChange={(e) => handleTenantNameChange(e.target.value)}
+                      placeholder="Ex: Exotic In House"
                       disabled={isLoading}
                       className={`w-full pl-10 pr-4 py-2.5 bg-slate-50/50 border rounded-2xl text-sm placeholder:text-slate-400/80 font-sans focus:outline-none focus:ring-2 transition-all ${
-                        errors.name
+                        errors.tenant_name
                           ? "border-rose-350 focus:ring-rose-500/20 text-rose-900"
                           : "border-slate-200 focus:border-emerald-500 focus:ring-emerald-500/10 text-slate-900"
                       }`}
                     />
                   </div>
-                  {errors.name && (
+                  {errors.tenant_name && (
                     <p className="text-[10px] text-rose-600 font-semibold mt-1 flex items-center gap-1">
-                      <AlertCircle size={10} /> {errors.name}
+                      <AlertCircle size={10} /> {errors.tenant_name}
                     </p>
                   )}
+                  <p className="text-[10px] text-slate-400 font-medium mt-1 leading-normal">
+                    Esse será o nome exibido dentro do sistema.
+                  </p>
                 </div>
 
-                {/* Tipo de Cadastro (Segmented Control) */}
+                {/* Endereço da sua empresa */}
                 <div>
                   <label className="block text-slate-700 text-xs font-bold uppercase tracking-wider mb-1.5">
-                    Tipo de Cadastro
+                    Endereço da sua empresa
                   </label>
-                  <div className="grid grid-cols-2 gap-2 bg-slate-100 p-1 rounded-2xl border border-slate-200/50">
-                    <button
-                      type="button"
-                      disabled={isLoading}
-                      onClick={() => {
-                        setIsEmpresa(false);
-                        setErrors((prev) => ({ ...prev, cpf: undefined, cnpj: undefined }));
-                      }}
-                      className={`py-2 text-xs font-bold rounded-xl transition-all cursor-pointer flex items-center justify-center gap-1.5 ${
-                        !isEmpresa
-                          ? "bg-white text-slate-900 shadow-sm"
-                          : "text-slate-500 hover:text-slate-800"
-                      }`}
-                    >
-                      Pessoa Física
-                    </button>
-                    <button
-                      type="button"
-                      disabled={isLoading}
-                      onClick={() => {
-                        setIsEmpresa(true);
-                        setErrors((prev) => ({ ...prev, cpf: undefined, cnpj: undefined }));
-                      }}
-                      className={`py-2 text-xs font-bold rounded-xl transition-all cursor-pointer flex items-center justify-center gap-1.5 ${
-                        isEmpresa
-                          ? "bg-white text-slate-900 shadow-sm"
-                          : "text-slate-500 hover:text-slate-800"
-                      }`}
-                    >
-                      Empresa
-                    </button>
-                  </div>
-                </div>
-
-                {/* CNPJ (only for Empresa, optional) */}
-                {isEmpresa && (
-                  <div>
-                    <label className="block text-slate-700 text-xs font-bold uppercase tracking-wider mb-1.5">
-                      CNPJ (Opcional)
-                    </label>
-                    <div className="relative">
-                      <span className="absolute inset-y-0 left-0 pl-3.5 flex items-center text-slate-400">
-                        <CreditCard size={16} />
-                      </span>
+                  <div className="relative flex items-center">
+                    <div className="relative flex-1">
                       <input
                         type="text"
-                        name="cnpj"
-                        value={formData.cnpj || ""}
-                        onChange={handleInputChange}
-                        placeholder="00.000.000/0000-00"
+                        name="account_slug"
+                        value={formData.account_slug || ""}
+                        onChange={(e) => handleSlugChange(e.target.value)}
+                        placeholder="exoticinhouse"
                         disabled={isLoading}
-                        className={`w-full pl-10 pr-4 py-2.5 bg-slate-50/50 border rounded-2xl text-sm placeholder:text-slate-400/80 font-sans focus:outline-none focus:ring-2 transition-all ${
-                          errors.cnpj
+                        className={`w-full px-4 py-2.5 bg-slate-50/50 border rounded-l-2xl text-sm placeholder:text-slate-400/80 font-sans focus:outline-none focus:ring-2 transition-all ${
+                          errors.account_slug
                             ? "border-rose-350 focus:ring-rose-500/20 text-rose-900"
                             : "border-slate-200 focus:border-emerald-500 focus:ring-emerald-500/10 text-slate-900"
                         }`}
                       />
                     </div>
-                    {errors.cnpj && (
-                      <p className="text-[10px] text-rose-600 font-semibold mt-1 flex items-center gap-1">
-                        <AlertCircle size={10} /> {errors.cnpj}
-                      </p>
-                    )}
-                    <p className="text-[10px] text-slate-400 font-medium mt-1 leading-normal">
-                      Informe o CNPJ da empresa, se possuir. Caso não informe, o sistema utilizará o CPF do responsável como documento principal da empresa.
-                    </p>
+                    <span className="bg-slate-100 border border-l-0 border-slate-200 text-slate-500 text-sm px-4 py-2.5 rounded-r-2xl font-medium select-none">
+                      .petvex.com.br
+                    </span>
                   </div>
-                )}
+                  {errors.account_slug && (
+                    <p className="text-[10px] text-rose-600 font-semibold mt-1 flex items-center gap-1">
+                      <AlertCircle size={10} /> {errors.account_slug}
+                    </p>
+                  )}
+                  <p className="text-[10px] text-slate-400 font-medium mt-1 leading-normal">
+                    {formData.account_slug ? (
+                      <>
+                        Sua empresa poderá ser acessada por:{" "}
+                        <strong className="text-slate-600">https://{formData.account_slug}.petvex.com.br</strong>
+                      </>
+                    ) : (
+                      "Exemplo: https://exoticinhouse.petvex.com.br"
+                    )}
+                  </p>
+                </div>
 
-                {/* CPF (for both, but has different labels) */}
+                {/* Nome do responsável */}
                 <div>
                   <label className="block text-slate-700 text-xs font-bold uppercase tracking-wider mb-1.5">
-                    {isEmpresa ? "CPF do responsável" : "CPF"}
+                    Nome do responsável
+                  </label>
+                  <div className="relative">
+                    <span className="absolute inset-y-0 left-0 pl-3.5 flex items-center text-slate-400">
+                      <User size={16} />
+                    </span>
+                    <input
+                      type="text"
+                      name="user_name"
+                      value={formData.user_name || ""}
+                      onChange={handleInputChange}
+                      placeholder="Ex: Murilo Dark"
+                      disabled={isLoading}
+                      className={`w-full pl-10 pr-4 py-2.5 bg-slate-50/50 border rounded-2xl text-sm placeholder:text-slate-400/80 font-sans focus:outline-none focus:ring-2 transition-all ${
+                        errors.user_name
+                          ? "border-rose-350 focus:ring-rose-500/20 text-rose-900"
+                          : "border-slate-200 focus:border-emerald-500 focus:ring-emerald-500/10 text-slate-900"
+                      }`}
+                    />
+                  </div>
+                  {errors.user_name && (
+                    <p className="text-[10px] text-rose-600 font-semibold mt-1 flex items-center gap-1">
+                      <AlertCircle size={10} /> {errors.user_name}
+                    </p>
+                  )}
+                </div>
+
+                {/* CPF do responsável */}
+                <div>
+                  <label className="block text-slate-700 text-xs font-bold uppercase tracking-wider mb-1.5">
+                    CPF do responsável
                   </label>
                   <div className="relative">
                     <span className="absolute inset-y-0 left-0 pl-3.5 flex items-center text-slate-400">
@@ -318,17 +357,12 @@ export const ClientSignupModal: React.FC<ClientSignupModalProps> = ({
                       <AlertCircle size={10} /> {errors.cpf}
                     </p>
                   )}
-                  {!isEmpresa && (
-                    <p className="text-[10px] text-slate-400 font-medium mt-1 leading-normal">
-                      Seu CPF será utilizado como documento principal do cadastro.
-                    </p>
-                  )}
                 </div>
 
-                {/* WhatsApp / Celular */}
+                {/* WhatsApp */}
                 <div>
                   <label className="block text-slate-700 text-xs font-bold uppercase tracking-wider mb-1.5">
-                    WhatsApp (Celular)
+                    WhatsApp
                   </label>
                   <div className="relative">
                     <span className="absolute inset-y-0 left-0 pl-3.5 flex items-center text-slate-400">
@@ -355,10 +389,10 @@ export const ClientSignupModal: React.FC<ClientSignupModalProps> = ({
                   )}
                 </div>
 
-                {/* E-mail */}
+                {/* E-mail comercial */}
                 <div>
                   <label className="block text-slate-700 text-xs font-bold uppercase tracking-wider mb-1.5">
-                    E-mail Comercial
+                    E-mail comercial
                   </label>
                   <div className="relative">
                     <span className="absolute inset-y-0 left-0 pl-3.5 flex items-center text-slate-400">
@@ -385,10 +419,10 @@ export const ClientSignupModal: React.FC<ClientSignupModalProps> = ({
                   )}
                 </div>
 
-                {/* Senha */}
+                {/* Senha de acesso */}
                 <div>
                   <label className="block text-slate-700 text-xs font-bold uppercase tracking-wider mb-1.5">
-                    Senha de Acesso
+                    Senha de acesso
                   </label>
                   <div className="relative">
                     <span className="absolute inset-y-0 left-0 pl-3.5 flex items-center text-slate-400">
@@ -399,7 +433,7 @@ export const ClientSignupModal: React.FC<ClientSignupModalProps> = ({
                       name="password"
                       value={formData.password || ""}
                       onChange={handleInputChange}
-                      placeholder="Mínimo de 6 caracteres"
+                      placeholder="Mínimo de 8 caracteres"
                       disabled={isLoading}
                       className={`w-full pl-10 pr-4 py-2.5 bg-slate-50/50 border rounded-2xl text-sm placeholder:text-slate-400/80 font-sans focus:outline-none focus:ring-2 transition-all ${
                         errors.password
@@ -411,6 +445,36 @@ export const ClientSignupModal: React.FC<ClientSignupModalProps> = ({
                   {errors.password && (
                     <p className="text-[10px] text-rose-600 font-semibold mt-1 flex items-center gap-1">
                       <AlertCircle size={10} /> {errors.password}
+                    </p>
+                  )}
+                </div>
+
+                {/* Confirmar senha */}
+                <div>
+                  <label className="block text-slate-700 text-xs font-bold uppercase tracking-wider mb-1.5">
+                    Confirmar senha
+                  </label>
+                  <div className="relative">
+                    <span className="absolute inset-y-0 left-0 pl-3.5 flex items-center text-slate-400">
+                      <Lock size={16} />
+                    </span>
+                    <input
+                      type="password"
+                      name="password_confirmation"
+                      value={formData.password_confirmation || ""}
+                      onChange={handleInputChange}
+                      placeholder="Digite a senha novamente"
+                      disabled={isLoading}
+                      className={`w-full pl-10 pr-4 py-2.5 bg-slate-50/50 border rounded-2xl text-sm placeholder:text-slate-400/80 font-sans focus:outline-none focus:ring-2 transition-all ${
+                        errors.password_confirmation
+                          ? "border-rose-350 focus:ring-rose-500/20 text-rose-900"
+                          : "border-slate-200 focus:border-emerald-500 focus:ring-emerald-500/10 text-slate-900"
+                      }`}
+                    />
+                  </div>
+                  {errors.password_confirmation && (
+                    <p className="text-[10px] text-rose-600 font-semibold mt-1 flex items-center gap-1">
+                      <AlertCircle size={10} /> {errors.password_confirmation}
                     </p>
                   )}
                 </div>

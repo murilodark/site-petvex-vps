@@ -1,13 +1,14 @@
 import { ClientRegisterInput } from "../types/client";
 
 export interface ValidationError {
-  name?: string;
-  document?: string;
+  tenant_name?: string;
+  account_slug?: string;
+  user_name?: string;
   cpf?: string;
-  cnpj?: string;
   phone?: string;
   email?: string;
   password?: string;
+  password_confirmation?: string;
   terms?: string;
 }
 
@@ -135,33 +136,33 @@ export function formatCNPJ(value: string): string {
 }
 
 // Schema validation runner
-export function validateClientRegister(data: Partial<ClientRegisterInput>, isEmpresa: boolean): ValidationError {
+export function validateClientRegister(data: Partial<ClientRegisterInput>, _isEmpresa?: boolean): ValidationError {
   const errors: ValidationError = {};
 
-  if (!data.name || data.name.trim().length < 3) {
-    errors.name = isEmpresa
-      ? "Razão Social / Nome da Empresa deve ter pelo menos 3 caracteres."
-      : "Nome completo deve ter pelo menos 3 caracteres.";
+  if (!data.tenant_name || data.tenant_name.trim().length < 3) {
+    errors.tenant_name = "O nome do estabelecimento deve ter pelo menos 3 caracteres.";
+  }
+
+  const slug = data.account_slug ? data.account_slug.trim() : "";
+  const slugRegex = /^[a-z0-9]+$/;
+  if (!slug) {
+    errors.account_slug = "O endereço da sua empresa é obrigatório.";
+  } else if (slug.length < 3 || !slugRegex.test(slug)) {
+    errors.account_slug = "Use apenas letras minúsculas e números. Exemplo: exoticinhouse";
+  }
+
+  if (!data.user_name || data.user_name.trim().length < 3) {
+    errors.user_name = "O nome do responsável deve ter pelo menos 3 caracteres.";
   }
 
   // CPF is always required
   const cleanCpf = (data.cpf || "").replace(/\D/g, "");
   if (!cleanCpf) {
-    errors.cpf = isEmpresa ? "O CPF do responsável é obrigatório." : "O CPF é obrigatório.";
+    errors.cpf = "O CPF é obrigatório.";
   } else if (cleanCpf.length !== 11) {
     errors.cpf = "CPF deve conter exatamente 11 dígitos.";
   } else if (!isValidCPF(cleanCpf)) {
     errors.cpf = "CPF inválido.";
-  }
-
-  // CNPJ is optional (only for Company)
-  if (isEmpresa && data.cnpj) {
-    const cleanCnpj = data.cnpj.replace(/\D/g, "");
-    if (cleanCnpj && cleanCnpj.length !== 14) {
-      errors.cnpj = "CNPJ deve conter exatamente 14 dígitos.";
-    } else if (cleanCnpj && !isValidCNPJ(cleanCnpj)) {
-      errors.cnpj = "CNPJ inválido.";
-    }
   }
 
   const cleanPhone = (data.phone || "").replace(/\D/g, "");
@@ -178,8 +179,14 @@ export function validateClientRegister(data: Partial<ClientRegisterInput>, isEmp
     errors.email = "Insira um endereço de e-mail válido.";
   }
 
-  if (!data.password || data.password.length < 6) {
-    errors.password = "A senha deve conter pelo menos 6 caracteres.";
+  if (!data.password || data.password.length < 8) {
+    errors.password = "A senha deve conter pelo menos 8 caracteres.";
+  }
+
+  if (!data.password_confirmation) {
+    errors.password_confirmation = "A confirmação de senha é obrigatória.";
+  } else if (data.password !== data.password_confirmation) {
+    errors.password_confirmation = "A confirmação de senha não confere.";
   }
 
   return errors;
