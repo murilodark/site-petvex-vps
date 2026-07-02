@@ -157,7 +157,7 @@ export const ClientSignupModal: React.FC<ClientSignupModalProps> = ({
   };
 
   const handleGoToClientArea = () => {
-    window.location.href = "https://app.petvex.com.br";
+    window.location.href = "https://app.petvex.com.br/login";
   };
 
   return (

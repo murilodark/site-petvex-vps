@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-#bash scripts/sync-ai-studio.sh
+#bash scripts/sync-ai-studio.sh 
 set -euo pipefail
 
 AI_REPO="/home/murilo/Documentos/projetos/petvex/site-petvex-ai-studio"

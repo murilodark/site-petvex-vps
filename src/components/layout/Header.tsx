@@ -92,7 +92,7 @@ export const Header: React.FC<HeaderProps> = ({ currentPath, onNavigate }) => {
             <Button
               variant="primary"
               size="sm"
-              onClick={() => window.open("https://app.petvex.com.br", "_blank")}
+              onClick={() => window.open("https://app.petvex.com.br/login", "_blank")}
               className="flex items-center gap-1.5 font-display text-xs rounded-full px-6 py-2.5 shadow-lg shadow-emerald-500/20 font-semibold cursor-pointer"
             >
               <Rocket size={14} />
@@ -146,7 +146,7 @@ export const Header: React.FC<HeaderProps> = ({ currentPath, onNavigate }) => {
               </a>
               <Button
                 variant="primary"
-                onClick={() => window.open("https://app.petvex.com.br", "_blank")}
+                onClick={() => window.open("https://app.petvex.com.br/login", "_blank")}
                 className="w-full font-display cursor-pointer"
               >
                 Área do Cliente
