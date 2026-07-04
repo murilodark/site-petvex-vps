@@ -149,21 +149,10 @@ extract_multiline_value_from_block() {
 
 SECRETS_PRODUCTION_CONTENT="$(resolve_block "$(extract_block "SECRETS_PRODUCTION")")"
 ENV_API_PRODUCTION_CONTENT="$(resolve_block "$(extract_block "ENV_API_PRODUCTION")")"
-
-SECRETS_HOMOLOG_CONTENT="$(resolve_block "$(extract_block "SECRETS_HOMOLOG")")"
-ENV_API_HOMOLOG_CONTENT="$(resolve_block "$(extract_block "ENV_API_HOMOLOG")")"
-
 SSH_PRIVATE_KEY_PRODUCTION_CONTENT="$(extract_multiline_value_from_block "INFO_GIT" "SSH_PRIVATE_KEY_PRODUCTION")"
-SSH_PRIVATE_KEY_HOMOLOG_CONTENT="$(extract_multiline_value_from_block "INFO_GIT" "SSH_PRIVATE_KEY_HOMOLOG")"
-
 
 if [ -z "$SECRETS_PRODUCTION_CONTENT" ]; then
   echo "Erro: bloco SECRETS_PRODUCTION vazio ou não encontrado."
-  exit 1
-fi
-
-if [ -z "$SECRETS_HOMOLOG_CONTENT" ]; then
-  echo "Erro: bloco SECRETS_HOMOLOG vazio ou não encontrado."
   exit 1
 fi
 
@@ -172,19 +161,30 @@ if [ -z "$SSH_PRIVATE_KEY_PRODUCTION_CONTENT" ]; then
   exit 1
 fi
 
-if [ -z "$SSH_PRIVATE_KEY_HOMOLOG_CONTENT" ]; then
-  echo "Erro: SSH_PRIVATE_KEY_HOMOLOG vazio ou não encontrado em INFO_GIT."
-  exit 1
-fi
-
-
 create_environment "production"
-create_environment "homolog"
-
 set_environment_secret "production" "SECRETS_PRODUCTION" "$SECRETS_PRODUCTION_CONTENT"
 set_environment_secret "production" "SSH_PRIVATE_KEY" "$SSH_PRIVATE_KEY_PRODUCTION_CONTENT"
 
-set_environment_secret "homolog" "SECRETS_HOMOLOG" "$SECRETS_HOMOLOG_CONTENT"
-set_environment_secret "homolog" "SSH_PRIVATE_KEY" "$SSH_PRIVATE_KEY_HOMOLOG_CONTENT"
+# SECRETS_HOMOLOG_CONTENT="$(resolve_block "$(extract_block "SECRETS_HOMOLOG")")"
+# ENV_API_HOMOLOG_CONTENT="$(resolve_block "$(extract_block "ENV_API_HOMOLOG")")"
+# SSH_PRIVATE_KEY_HOMOLOG_CONTENT="$(extract_multiline_value_from_block "INFO_GIT" "SSH_PRIVATE_KEY_HOMOLOG")"
+
+# if [ -z "$SECRETS_HOMOLOG_CONTENT" ]; then
+#   echo "Erro: bloco SECRETS_HOMOLOG vazio ou não encontrado."
+#   exit 1
+# fi
+
+# if [ -z "$SSH_PRIVATE_KEY_HOMOLOG_CONTENT" ]; then
+#   echo "Erro: SSH_PRIVATE_KEY_HOMOLOG vazio ou não encontrado em INFO_GIT."
+#   exit 1
+# fi
+
+# create_environment "homolog"
+# set_environment_secret "homolog" "SECRETS_HOMOLOG" "$SECRETS_HOMOLOG_CONTENT"
+# set_environment_secret "homolog" "SSH_PRIVATE_KEY" "$SSH_PRIVATE_KEY_HOMOLOG_CONTENT"
+
+
+
+
 
 echo "Environments e secrets sincronizados com sucesso."

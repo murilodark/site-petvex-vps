@@ -35,26 +35,30 @@ jobs:
         run: |
           mkdir -p ~/.ssh
           chmod 700 ~/.ssh
-
+          # CORREÇÃO 1: Garantir que o script use a variável exportada do ambiente
+          export $(cat .env | xargs)
           for i in 1 2 3 4 5; do
             echo "Tentativa $i para capturar host key..."
             ssh-keyscan -T 30 -H "$VPS_HOST" >> ~/.ssh/known_hosts && break
             sleep 10
           done
-
           test -s ~/.ssh/known_hosts
           chmod 644 ~/.ssh/known_hosts
-
 
       - name: "Instalar dependências"
         run: npm ci
 
       - name: "Build aplicação"
-        run: npm run build
+        # CORREÇÃO 2: Força o runner a injetar o .env na memória do processo de build do Vite
+        run: |
+          export $(cat .env | xargs)
+          npm run build
 
       - name: "Deploy Front Production"
         run: |
           set -e
+          # CORREÇÃO 3: Força a leitura do .env criado no passo anterior para o shell atual do rsync/ssh
+          export $(cat .env | xargs)
 
           printf "%s\n" "${{ secrets.SSH_PRIVATE_KEY }}" > deploy_key
           chmod 600 deploy_key
@@ -72,6 +76,7 @@ jobs:
             -e "ssh -i deploy_key" \
             .env "$USERNAME@$VPS_HOST:$DEPLOY_PATH/.env"
 
+          # CORREÇÃO 4: Garantir o envio do nome correto do arquivo que você usa no docker compose comando abaixo
           rsync -az \
             -e "ssh -i deploy_key" \
             docker-compose.production.yml \
@@ -94,6 +99,7 @@ jobs:
 
       - name: "Health Check"
         run: |
+          export $(cat .env | xargs)
           for i in {1..20}; do
             STATUS=$(curl -k -L -s -o /dev/null -w "%{http_code}" "$VITE_FRONT_URL")
 
