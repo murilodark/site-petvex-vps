@@ -135,22 +135,47 @@ export const ClientSignupModal: React.FC<ClientSignupModalProps> = ({
       setIsSuccess(true);
     } catch (err: any) {
       console.error("Signup error:", err);
+      let customApiError = err.message || "Erro de conexão com o servidor. Tente novamente.";
+      
       if (err.errors) {
         // Map API field errors
         const newErrors: ValidationError = {};
+        const errorMessages: string[] = [];
+
         Object.keys(err.errors).forEach((key) => {
           const messages = err.errors[key];
           if (Array.isArray(messages) && messages.length > 0) {
+            const firstMsg = messages[0];
             if (key === "account_slug") {
               newErrors.account_slug = "Este endereço já está em uso. Escolha outro.";
+              errorMessages.push(`Endereço da empresa: ${firstMsg}`);
             } else {
-              newErrors[key as keyof ValidationError] = messages[0];
+              newErrors[key as keyof ValidationError] = firstMsg;
+              const labelMap: Record<string, string> = {
+                tenant_name: "Nome do estabelecimento",
+                user_name: "Nome do responsável",
+                cpf: "CPF",
+                phone: "WhatsApp",
+                email: "E-mail",
+                password: "Senha",
+                password_confirmation: "Confirmação de senha"
+              };
+              const label = labelMap[key] || key;
+              errorMessages.push(`${label}: ${firstMsg}`);
             }
+          } else if (typeof messages === "string") {
+            newErrors[key as keyof ValidationError] = messages;
+            errorMessages.push(`${key}: ${messages}`);
           }
         });
+
         setErrors(newErrors);
+
+        if (errorMessages.length > 0) {
+          customApiError = `Erro de validação: ${errorMessages.join(" | ")}`;
+        }
       }
-      setApiError(err.message || "Erro de conexão com o servidor. Tente novamente.");
+      setApiError(customApiError);
     } finally {
       setIsLoading(false);
     }

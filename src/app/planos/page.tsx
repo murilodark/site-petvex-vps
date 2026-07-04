@@ -1,5 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { updateDocumentSeo } from "../../lib/seo";
+import PlanoUnicoPage from "./components/PlanoUnicoPage";
+
 import { usePublicPlans } from "../../hooks/usePublicPlans";
 import { PublicPlan, PublicPlanFeatures } from "../../types/site";
 import { getWhatsappLink } from "../../lib/whatsapp";
@@ -71,6 +73,10 @@ interface PlansPageProps {
 }
 
 export default function PlansPage({ onOpenSignup }: PlansPageProps) {
+  return <PlanoUnicoPage onOpenSignup={onOpenSignup} />;
+}
+
+export function LegacyPlansPage({ onOpenSignup }: PlansPageProps) {
   const { plans, loading, error, refetch } = usePublicPlans();
   const [billingCycle, setBillingCycle] = useState<"monthly" | "yearly">("monthly");
 
