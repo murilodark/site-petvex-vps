@@ -8,7 +8,7 @@ import BenefitsSection from "../components/sections/BenefitsSection";
 import FeaturesSection from "../components/sections/FeaturesSection";
 import HowItWorksSection from "../components/sections/HowItWorksSection";
 import DifferentialsSection from "../components/sections/DifferentialsSection";
-import PricingSection from "../components/sections/PricingSection";
+import PlansPage from "./planos/page";
 import TestimonialsSection from "../components/sections/TestimonialsSection";
 import FaqSection from "../components/sections/FaqSection";
 import WhatsappSection from "../components/sections/WhatsappSection";
@@ -50,8 +50,9 @@ export default function HomePage({ onNavigate, onOpenSignup }: HomePageProps) {
       {/* 7. DifferentialsSection showing our special edges */}
       <DifferentialsSection />
 
-      {/* 8. PricingSection detailing plans */}
-      <PricingSection onOpenSignup={onOpenSignup} />
+    
+
+       <PlansPage onOpenSignup={onOpenSignup} />;
 
       {/* 9. TestimonialsSection detailing user results */}
       <TestimonialsSection />
