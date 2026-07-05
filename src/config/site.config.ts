@@ -10,8 +10,8 @@ export const siteConfig: SiteConfig = {
   phone: "(11) 99999-8888",
   hours: "Segunda a Sexta: 08:00 às 18:00 | Sábado: 08:00 às 13:00",
   socials: {
-    instagram: "https://instagram.com/petvex",
-    facebook: "https://facebook.com/petvex",
+    instagram: "https://instagram.com/petvex.app",
+    facebook: "https://facebook.com/petvexapp",
     youtube: "https://youtube.com/petvex"
   },
   navigation: [

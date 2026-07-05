@@ -23,14 +23,16 @@ export default function HomePage({ onNavigate, onOpenSignup }: HomePageProps) {
       {/* 1. Hero */}
       <HeroSection onNavigate={onNavigate} onOpenSignup={onOpenSignup} />
 
+       {/* 4 & 5. Para quem é & Comece com CPF */}
+      <StartingBusinessSection onOpenSignup={onOpenSignup} />
+
       {/* 2. Benefícios rápidos */}
       <BenefitsSection />
 
       {/* 3. Demonstração visual da agenda */}
       <AgendaDemoSection />
 
-      {/* 4 & 5. Para quem é & Comece com CPF */}
-      <StartingBusinessSection onOpenSignup={onOpenSignup} />
+     
 
       {/* 6. Plano */}
       <PricingSection onOpenSignup={onOpenSignup} />

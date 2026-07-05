@@ -4,8 +4,7 @@ import { getWhatsappLink } from "../../lib/whatsapp";
 import { Button } from "../ui/Button";
 import { Container } from "../ui/Container";
 import { GradientBlob } from "../ui/GradientBlob";
-import { MockupBrowser } from "../ui/MockupBrowser";
-import { DashboardPreview } from "../shared/DashboardPreview";
+import { AppScreenshotGallery } from "../shared/AppMedia";
 import { MessageSquare, ArrowRight, Sparkles } from "lucide-react";
 
 interface HeroSectionProps {
@@ -141,12 +140,18 @@ export const HeroSection: React.FC<HeroSectionProps> = ({ onNavigate, onOpenSign
               transition={{ duration: 0.5, delay: 0.15 }}
               className="relative"
             >
-              {/* Decorative lighting detrás del browser */}
+              {/* Decorative lighting detrás de las screenshots */}
               <div className="absolute -inset-1.5 bg-gradient-to-tr from-emerald-500 to-cyan-400 rounded-3xl blur-2xl opacity-10"></div>
               
-              <MockupBrowser url="app.petvex.com.br/dashboard">
-                <DashboardPreview />
-              </MockupBrowser>
+              <AppScreenshotGallery
+                folder="dashboard"
+                device="all"
+                autoPlay
+                delay={3500}
+                showDots
+                showArrows={false}
+                loop
+              />
             </motion.div>
           </div>
 
