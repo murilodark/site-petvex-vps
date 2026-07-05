@@ -24,13 +24,18 @@ const modules = (import.meta as any).glob("../../../assets/images/apppetvex/**/*
 });
 
 // Parse the matched modules into AppMediaItem array
+// Parse the matched modules into AppMediaItem array
 const allMediaItems: AppMediaItem[] = Object.keys(modules).map((key) => {
-  // key is like "../../../assets/images/apppetvex/dashboard/desktop-01.png"
-  const parts = key.split("/");
-  const folder = parts[parts.length - 2] as AppMediaFolder;
-  const fileNameWithExt = parts[parts.length - 1];
-  const dotIndex = fileNameWithExt.lastIndexOf(".");
-  const name = dotIndex !== -1 ? fileNameWithExt.substring(0, dotIndex) : fileNameWithExt;
+  // Regex segura: captura a pasta e o nome do arquivo com extensões comuns
+  // Independe de caminhos relativos (../../) mudarem no build
+  const match = key.match(/\/([^/]+)\/([^/]+)\.(png|jpg|jpeg|webp)$/i);
+  
+  if (!match) {
+    throw new Error(`Não foi possível mapear a imagem no glob: ${key}`);
+  }
+
+  const folder = match[1] as AppMediaFolder;
+  const name = match[2]; // Nome limpo sem a extensão (ex: "mobile-02")
 
   let device: "desktop" | "mobile" | "unknown" = "unknown";
   if (name.startsWith("desktop-")) {
@@ -56,6 +61,7 @@ const allMediaItems: AppMediaItem[] = Object.keys(modules).map((key) => {
     alt,
   };
 });
+
 
 /**
  * Retrieves the items in the requested folder, optionally filtered by device.
