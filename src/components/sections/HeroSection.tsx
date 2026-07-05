@@ -1,150 +1,147 @@
 import React from "react";
 import { motion } from "motion/react";
-import { siteConfig } from "../../config/site.config";
 import { getWhatsappLink } from "../../lib/whatsapp";
 import { Button } from "../ui/Button";
 import { Container } from "../ui/Container";
 import { GradientBlob } from "../ui/GradientBlob";
 import { MockupBrowser } from "../ui/MockupBrowser";
 import { DashboardPreview } from "../shared/DashboardPreview";
-import { MessageCircle, PlayCircle, ShieldCheck, Check } from "lucide-react";
+import { MessageSquare, ArrowRight, Sparkles } from "lucide-react";
 
 interface HeroSectionProps {
   onNavigate: (path: string) => void;
+  onOpenSignup?: (plan: any) => void;
 }
 
-export const HeroSection: React.FC<HeroSectionProps> = ({ onNavigate }) => {
+export const HeroSection: React.FC<HeroSectionProps> = ({ onNavigate, onOpenSignup }) => {
+  const handleCtaClick = () => {
+    if (onOpenSignup) {
+      onOpenSignup({
+        id: 1,
+        name: "Petvex Completo",
+        slug: "petvex-completo",
+        monthly_price: 1
+      });
+    } else {
+      onNavigate("/planos");
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    }
+  };
+
   return (
-    <section className="relative pt-32 pb-20 md:pt-40 md:pb-28 overflow-hidden bg-slate-50/40">
+    <section className="relative pt-12 pb-10 sm:pt-20 sm:pb-16 overflow-hidden bg-slate-50/50">
       
-      {/* Decorative Blur Background Blobs */}
-      <GradientBlob color="emerald" size="lg" className="-top-40 -left-20" />
-      <GradientBlob color="cyan" size="lg" className="bottom-10 -right-20" />
+      {/* Decorative Ambient Blobs */}
+      <GradientBlob color="emerald" size="lg" className="-top-36 -left-16" />
+      <GradientBlob color="cyan" size="lg" className="bottom-8 -right-16" />
 
       <Container size="lg" className="relative z-10">
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-center">
           
-          {/* Left Column: Headline Copy & Anchors */}
-          <div className="lg:col-span-5 flex flex-col gap-6 text-left">
+          {/* Left Column: Direct and Punchy CRO Copy */}
+          <div className="lg:col-span-6 flex flex-col gap-4 sm:gap-5 text-left">
             
-            {/* Tagline Badge */}
+            {/* Action Highlight Badge */}
             <motion.div
-              initial={{ opacity: 0, y: 15 }}
+              initial={{ opacity: 0, y: 10 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.5 }}
-              className="inline-flex self-start items-center gap-1.5 px-3 py-1.5 rounded-full bg-emerald-50 border border-emerald-500/10"
+              transition={{ duration: 0.4 }}
+              className="inline-flex self-start items-center gap-1.5 px-3 py-1 rounded-full bg-emerald-100/80 border border-emerald-500/20 shadow-sm"
             >
-              <span className="flex h-2 w-2 rounded-full bg-emerald-500 animate-ping"></span>
-              <span className="text-emerald-700 text-xs font-semibold font-display tracking-wide uppercase">
-                {siteConfig.tagline}
+              <Sparkles size={12} className="text-emerald-600 animate-pulse" />
+              <span className="text-emerald-800 text-[10px] sm:text-[11px] font-black font-display uppercase tracking-wider">
+                Inicie Hoje Mesmo com seu CPF
               </span>
             </motion.div>
 
-            {/* Giant Title */}
+            {/* Main Headline */}
             <motion.h1
-              initial={{ opacity: 0, y: 15 }}
+              initial={{ opacity: 0, y: 10 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.5, delay: 0.1 }}
-              className="text-4xl sm:text-5xl font-display font-extrabold text-slate-900 leading-tight tracking-tight text-glow"
+              transition={{ duration: 0.4, delay: 0.05 }}
+              className="text-2xl sm:text-4xl md:text-5xl lg:text-6xl font-display font-black text-slate-950 leading-tight tracking-tight"
             >
-              {siteConfig.hero.headline}
+              Você cuida dos animais. <br className="block mt-1" />
+              <span className="text-transparent bg-clip-text bg-gradient-to-r from-emerald-600 via-emerald-500 to-teal-600 font-extrabold block mt-2 text-3xl sm:text-5xl md:text-6xl lg:text-7xl">
+                O Petvex cuida da gestão.
+              </span>
             </motion.h1>
 
-            {/* Subheading sentence */}
+            {/* Short Objective Subtitle */}
             <motion.p
-              initial={{ opacity: 0, y: 15 }}
+              initial={{ opacity: 0, y: 10 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.5, delay: 0.2 }}
-              className="text-slate-600 text-base sm:text-lg leading-relaxed max-w-xl"
+              transition={{ duration: 0.4, delay: 0.1 }}
+              className="text-slate-700 text-sm sm:text-base md:text-lg leading-relaxed max-w-xl font-semibold"
             >
-              {siteConfig.hero.subheadline}
+              Agenda, clientes, pets, estoque, vendas e financeiro em um único sistema para groomers, veterinários autônomos e pequenos pet shops.
             </motion.p>
 
-            {/* Active CTAs row */}
+            {/* Primary & Secondary Call to Actions */}
             <motion.div
-              initial={{ opacity: 0, y: 15 }}
+              initial={{ opacity: 0, y: 10 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.5, delay: 0.3 }}
-              className="flex flex-col sm:flex-row items-stretch sm:items-center gap-4 mt-2"
+              transition={{ duration: 0.4, delay: 0.15 }}
+              className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 mt-1"
             >
               <Button
                 variant="primary"
                 size="lg"
-                onClick={() => onNavigate("/planos")}
-                className="font-display font-bold text-sm tracking-wide px-8 py-3.5 rounded-full shadow-xl shadow-emerald-500/15 hover:shadow-emerald-500/30 group"
+                onClick={handleCtaClick}
+                className="font-display font-black text-xs sm:text-sm uppercase tracking-wide px-8 py-4 sm:py-4.5 rounded-xl shadow-md shadow-emerald-600/10 hover:shadow-emerald-600/20 group cursor-pointer text-center flex items-center justify-center gap-2 bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500"
+                id="hero-cta-primary"
               >
-                {siteConfig.hero.ctaPrimary}
-                <PlayCircle size={18} className="ml-2 transition-transform duration-300 group-hover:translate-x-0.5" />
+                Criar conta grátis
+                <ArrowRight size={16} className="transition-transform duration-300 group-hover:translate-x-1" />
               </Button>
-              <a
-                href={getWhatsappLink()}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="inline-flex items-center justify-center font-display font-bold transition border border-slate-200/80 py-3.5 hover:bg-slate-50 text-slate-705 px-7 rounded-full hover:text-slate-950 bg-white shadow-xs"
+              
+              <Button
+                variant="outline"
+                size="lg"
+                onClick={handleCtaClick}
+                className="font-display font-black uppercase transition border border-slate-300 py-3.5 sm:py-4 hover:bg-slate-50 text-slate-800 px-7 rounded-xl hover:text-slate-950 bg-white shadow-sm text-xs tracking-wide cursor-pointer text-center flex items-center justify-center"
+                id="hero-cta-secondary"
               >
-                <MessageCircle size={18} className="mr-2 text-emerald-500 animate-pulse" />
-                {siteConfig.hero.ctaSecondary}
-              </a>
+                Teste grátis por 7 dias
+              </Button>
             </motion.div>
 
-            {/* Security reassurance indicators */}
+            {/* Micro-Copy: 4 small distinct highlights with check icon below CTAs */}
             <motion.div
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
-              transition={{ duration: 0.5, delay: 0.4 }}
-              className="flex items-center gap-5 mt-1 text-xs text-slate-500"
+              transition={{ duration: 0.5, delay: 0.2 }}
+              className="grid grid-cols-1 sm:grid-cols-2 gap-x-4 gap-y-2.5 mt-2 max-w-lg text-slate-600 font-bold text-xs"
             >
-              <div className="flex items-center gap-1.5">
-                <ShieldCheck size={16} className="text-emerald-500" />
-                <span>14 dias grátis</span>
+              <div className="flex items-center gap-1.5 pl-1">
+                <span className="text-emerald-500 font-bold shrink-0">✅</span>
+                <span>Teste grátis por 7 dias</span>
               </div>
-              <span>•</span>
-              <div>Sem cartão de crédito</div>
-              <span>•</span>
-              <div>Suporte VIP</div>
-            </motion.div>
-
-            {/* Visual Highlight Card: Start with CPF */}
-            <motion.div
-              initial={{ opacity: 0, y: 15 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.5, delay: 0.5 }}
-              className="mt-2 p-5 bg-gradient-to-br from-white to-slate-50 border border-emerald-500/15 rounded-2xl shadow-md shadow-emerald-500/5 relative overflow-hidden"
-            >
-              {/* Subtle top decoration */}
-              <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-emerald-500 to-teal-400"></div>
-              
-              <h3 className="text-sm font-bold text-slate-900 font-display flex items-center gap-2 mb-3">
-                <span className="flex h-5 w-5 rounded-full bg-emerald-100 text-emerald-600 items-center justify-center text-xs font-black">✓</span>
-                Você não precisa ter CNPJ para começar.
-              </h3>
-              <ul className="space-y-2">
-                {[
-                  "Cadastre-se utilizando apenas seu CPF.",
-                  "Ideal para groomers e veterinários autônomos.",
-                  "Organize seu negócio desde o primeiro cliente.",
-                  "Quando abrir sua empresa, basta atualizar seu cadastro.",
-                  "Sem burocracia."
-                ].map((item, index) => (
-                  <li key={index} className="flex items-start gap-2 text-xs text-slate-600 font-sans leading-normal">
-                    <Check size={14} className="text-emerald-500 mt-0.5 shrink-0" />
-                    <span>{item}</span>
-                  </li>
-                ))}
-              </ul>
+              <div className="flex items-center gap-1.5 pl-1">
+                <span className="text-emerald-500 font-bold shrink-0">✅</span>
+                <span>Sem cartão de crédito</span>
+              </div>
+              <div className="flex items-center gap-1.5 pl-1">
+                <span className="text-emerald-500 font-bold shrink-0">✅</span>
+                <span>Não precisa de CNPJ</span>
+              </div>
+              <div className="flex items-center gap-1.5 pl-1">
+                <span className="text-emerald-500 font-bold shrink-0">✅</span>
+                <span>Ambiente criado automaticamente</span>
+              </div>
             </motion.div>
 
           </div>
 
           {/* Right Column: High Fidelity Dashboard Device Frame mockup */}
-          <div className="lg:col-span-7 w-full">
+          <div className="lg:col-span-6 w-full mt-6 lg:mt-0">
             <motion.div
-              initial={{ opacity: 0, scale: 0.95 }}
+              initial={{ opacity: 0, scale: 0.96 }}
               animate={{ opacity: 1, scale: 1 }}
-              transition={{ duration: 0.6, delay: 0.2 }}
+              transition={{ duration: 0.5, delay: 0.15 }}
               className="relative"
             >
-              {/* Decorative radial lighting detrás del browser */}
+              {/* Decorative lighting detrás del browser */}
               <div className="absolute -inset-1.5 bg-gradient-to-tr from-emerald-500 to-cyan-400 rounded-3xl blur-2xl opacity-10"></div>
               
               <MockupBrowser url="app.petvex.com.br/dashboard">

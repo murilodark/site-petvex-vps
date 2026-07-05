@@ -6,6 +6,7 @@ export interface SectionTitleProps extends React.HTMLAttributes<HTMLDivElement> 
   title: string;
   subtitle?: string;
   align?: "left" | "center";
+  titleColor?: string; // Adicione esta linha
 }
 
 export const SectionTitle: React.FC<SectionTitleProps> = ({
@@ -14,6 +15,7 @@ export const SectionTitle: React.FC<SectionTitleProps> = ({
   title,
   subtitle,
   align = "center",
+  titleColor = "text-slate-900", // Valor padrão clássico
   id,
   ...props
 }) => {
@@ -32,7 +34,10 @@ export const SectionTitle: React.FC<SectionTitleProps> = ({
           {badge}
         </span>
       )}
-      <h2 className="text-3xl sm:text-4xl font-display font-extrabold text-slate-900 tracking-tight leading-tight max-w-3xl">
+      <h2 className={cn(
+  "text-3xl sm:text-4xl font-display font-extrabold tracking-tight leading-tight max-w-3xl",
+  titleColor // Injetado dinamicamente aqui
+)}>
         {title}
       </h2>
       {subtitle && (

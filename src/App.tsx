@@ -3,6 +3,7 @@ import Header from "./components/layout/Header";
 import Footer from "./components/layout/Footer";
 import HomePage from "./app/page";
 import FeaturesPage from "./app/funcionalidades/page";
+import BeneficiosPage from "./app/beneficios/page";
 import PlansPage from "./app/planos/page";
 import ContactPage from "./app/contato/page";
 import DemoPage from "./app/demonstracao/page";
@@ -50,6 +51,8 @@ export default function App() {
         return <HomePage onNavigate={handleNavigate} onOpenSignup={setSelectedPlanForSignup} />;
       case "/funcionalidades":
         return <FeaturesPage />;
+      case "/beneficios":
+        return <BeneficiosPage />;
       case "/planos":
         return <PlansPage onOpenSignup={setSelectedPlanForSignup} />;
       case "/contato":
