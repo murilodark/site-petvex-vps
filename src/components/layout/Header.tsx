@@ -4,8 +4,8 @@ import { useScrollPosition } from "../../hooks/useScrollPosition";
 import { getWhatsappLink } from "../../lib/whatsapp";
 import { Button } from "../ui/Button";
 import { Menu, X, Rocket } from "lucide-react";
-// @ts-ignore
-import logoImg from "../../assets/images/logo.png";
+
+import logoImg from "@/assets/images/logo.png";
 
 interface HeaderProps {
   currentPath: string;
