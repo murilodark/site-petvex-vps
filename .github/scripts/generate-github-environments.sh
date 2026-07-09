@@ -28,6 +28,10 @@ load_info_git_value() {
 
 OWNER="$(load_info_git_value "OWNER")"
 REPO="$(load_info_git_value "REPOSITORY")"
+SECRETS_PRODUCTION="$(load_info_git_value "SECRETS_PRODUCTION")"
+SECRETS_HOMOLOG="$(load_info_git_value "SECRETS_HOMOLOG")"
+
+
 
 if [ -z "$OWNER" ] || [ -z "$REPO" ]; then
   echo "Erro: OWNER ou REPOSITORY não encontrado em $ENV_FILE dentro do bloco INFO_GIT."
@@ -36,6 +40,9 @@ fi
 
 echo "OWNER=$OWNER"
 echo "REPO=$REPO"
+
+
+
 
 
 
@@ -147,41 +154,53 @@ extract_multiline_value_from_block() {
   ' "$ENV_FILE"
 }
 
-SECRETS_PRODUCTION_CONTENT="$(resolve_block "$(extract_block "SECRETS_PRODUCTION")")"
-ENV_API_PRODUCTION_CONTENT="$(resolve_block "$(extract_block "ENV_API_PRODUCTION")")"
-SSH_PRIVATE_KEY_PRODUCTION_CONTENT="$(extract_multiline_value_from_block "INFO_GIT" "SSH_PRIVATE_KEY_PRODUCTION")"
+if [ "$SECRETS_PRODUCTION" = "true" ]; then
+  echo "Sincronizando secrets para o environment de produção..."
+  SECRETS_PRODUCTION_CONTENT="$(resolve_block "$(extract_block "SECRETS_PRODUCTION")")"
+  ENV_API_PRODUCTION_CONTENT="$(resolve_block "$(extract_block "ENV_API_PRODUCTION")")"
+  SSH_PRIVATE_KEY_PRODUCTION_CONTENT="$(extract_multiline_value_from_block "INFO_GIT" "SSH_PRIVATE_KEY_PRODUCTION")"
 
-if [ -z "$SECRETS_PRODUCTION_CONTENT" ]; then
-  echo "Erro: bloco SECRETS_PRODUCTION vazio ou não encontrado."
-  exit 1
+  if [ -z "$SECRETS_PRODUCTION_CONTENT" ]; then
+    echo "Erro: bloco SECRETS_PRODUCTION vazio ou não encontrado."
+    exit 1
+  fi
+
+  if [ -z "$SSH_PRIVATE_KEY_PRODUCTION_CONTENT" ]; then
+    echo "Erro: SSH_PRIVATE_KEY_PRODUCTION vazio ou não encontrado em INFO_GIT."
+    exit 1
+  fi
+
+  create_environment "production"
+  set_environment_secret "production" "SECRETS_PRODUCTION" "$SECRETS_PRODUCTION_CONTENT"
+  set_environment_secret "production" "SSH_PRIVATE_KEY" "$SSH_PRIVATE_KEY_PRODUCTION_CONTENT"
+else
+  echo "Ignorando sincronização de secrets para o environment de produção."
 fi
 
-if [ -z "$SSH_PRIVATE_KEY_PRODUCTION_CONTENT" ]; then
-  echo "Erro: SSH_PRIVATE_KEY_PRODUCTION vazio ou não encontrado em INFO_GIT."
-  exit 1
+
+if [ "$SECRETS_HOMOLOG" = "true" ]; then
+    echo "Sincronizando secrets para o environment de homologação..."
+ 
+    SECRETS_HOMOLOG_CONTENT="$(resolve_block "$(extract_block "SECRETS_HOMOLOG")")"
+    ENV_API_HOMOLOG_CONTENT="$(resolve_block "$(extract_block "ENV_API_HOMOLOG")")"
+    SSH_PRIVATE_KEY_HOMOLOG_CONTENT="$(extract_multiline_value_from_block "INFO_GIT" "SSH_PRIVATE_KEY_HOMOLOG")"
+
+    if [ -z "$SECRETS_HOMOLOG_CONTENT" ]; then
+      echo "Erro: bloco SECRETS_HOMOLOG vazio ou não encontrado."
+      exit 1
+    fi
+
+    if [ -z "$SSH_PRIVATE_KEY_HOMOLOG_CONTENT" ]; then
+      echo "Erro: SSH_PRIVATE_KEY_HOMOLOG vazio ou não encontrado em INFO_GIT."
+      exit 1
+    fi
+
+    create_environment "homolog"
+    set_environment_secret "homolog" "SECRETS_HOMOLOG" "$SECRETS_HOMOLOG_CONTENT"
+    set_environment_secret "homolog" "SSH_PRIVATE_KEY" "$SSH_PRIVATE_KEY_HOMOLOG_CONTENT"
+else
+  echo "Ignorando sincronização de secrets para o environment de homologação."
 fi
-
-create_environment "production"
-set_environment_secret "production" "SECRETS_PRODUCTION" "$SECRETS_PRODUCTION_CONTENT"
-set_environment_secret "production" "SSH_PRIVATE_KEY" "$SSH_PRIVATE_KEY_PRODUCTION_CONTENT"
-
-# SECRETS_HOMOLOG_CONTENT="$(resolve_block "$(extract_block "SECRETS_HOMOLOG")")"
-# ENV_API_HOMOLOG_CONTENT="$(resolve_block "$(extract_block "ENV_API_HOMOLOG")")"
-# SSH_PRIVATE_KEY_HOMOLOG_CONTENT="$(extract_multiline_value_from_block "INFO_GIT" "SSH_PRIVATE_KEY_HOMOLOG")"
-
-# if [ -z "$SECRETS_HOMOLOG_CONTENT" ]; then
-#   echo "Erro: bloco SECRETS_HOMOLOG vazio ou não encontrado."
-#   exit 1
-# fi
-
-# if [ -z "$SSH_PRIVATE_KEY_HOMOLOG_CONTENT" ]; then
-#   echo "Erro: SSH_PRIVATE_KEY_HOMOLOG vazio ou não encontrado em INFO_GIT."
-#   exit 1
-# fi
-
-# create_environment "homolog"
-# set_environment_secret "homolog" "SECRETS_HOMOLOG" "$SECRETS_HOMOLOG_CONTENT"
-# set_environment_secret "homolog" "SSH_PRIVATE_KEY" "$SSH_PRIVATE_KEY_HOMOLOG_CONTENT"
 
 
 
