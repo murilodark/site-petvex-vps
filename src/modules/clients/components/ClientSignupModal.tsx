@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { motion, AnimatePresence } from "motion/react";
-import { X, Check, ArrowRight, ShieldCheck, User, CreditCard, Phone, Mail, Lock, AlertCircle } from "lucide-react";
+import { X, Check, ArrowRight, ShieldCheck, User, CreditCard, Phone, Mail, Lock, AlertCircle, Eye, EyeOff } from "lucide-react";
 import { ClientRegisterInput } from "../types/client";
 import { validateClientRegister, formatCPF, formatCNPJ, formatPhone, ValidationError } from "../schemas/client.schema";
 import { registerClient } from "../services/client.service";
@@ -46,6 +46,8 @@ export const ClientSignupModal: React.FC<ClientSignupModalProps> = ({
   const [isLoading, setIsLoading] = useState(false);
   const [isSuccess, setIsSuccess] = useState(false);
   const [isVerificationOpen, setIsVerificationOpen] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
+  const [showPasswordConfirmation, setShowPasswordConfirmation] = useState(false);
 
   if (!isOpen || !selectedPlan) return null;
 
@@ -66,6 +68,8 @@ export const ClientSignupModal: React.FC<ClientSignupModalProps> = ({
     setIsSlugManuallyEdited(false);
     setIsVerificationOpen(false);
     setIsSuccess(false);
+    setShowPassword(false);
+    setShowPasswordConfirmation(false);
     cleanupSession();
     onClose();
   };
@@ -220,7 +224,6 @@ export const ClientSignupModal: React.FC<ClientSignupModalProps> = ({
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
-          onClick={isLoading ? undefined : handleCloseAll}
           className="absolute inset-0 bg-slate-900/60 backdrop-blur-xs"
         />
 
@@ -481,18 +484,33 @@ export const ClientSignupModal: React.FC<ClientSignupModalProps> = ({
                       <Lock size={16} />
                     </span>
                     <input
-                      type="password"
+                      type={showPassword ? "text" : "password"}
                       name="password"
                       value={formData.password || ""}
                       onChange={handleInputChange}
                       placeholder="Mínimo de 8 caracteres"
                       disabled={isLoading}
-                      className={`w-full pl-10 pr-4 py-2.5 bg-slate-50/50 border rounded-2xl text-sm placeholder:text-slate-400/80 font-sans focus:outline-none focus:ring-2 transition-all ${
+                      className={`w-full pl-10 pr-10 py-2.5 bg-slate-50/50 border rounded-2xl text-sm placeholder:text-slate-400/80 font-sans focus:outline-none focus:ring-2 transition-all ${
                         errors.password
                           ? "border-rose-350 focus:ring-rose-500/20 text-rose-900"
                           : "border-slate-200 focus:border-emerald-500 focus:ring-emerald-500/10 text-slate-900"
                       }`}
                     />
+                    <button
+                      type="button"
+                      tabIndex={-1}
+                      onClick={(e) => {
+                        e.preventDefault();
+                        setShowPassword(!showPassword);
+                      }}
+                      onMouseDown={(e) => {
+                        e.preventDefault();
+                      }}
+                      className="absolute inset-y-0 right-0 pr-3 flex items-center text-slate-400 hover:text-slate-600 transition focus:outline-none cursor-pointer"
+                      aria-label={showPassword ? "Ocultar senha" : "Exibir senha"}
+                    >
+                      {showPassword ? <EyeOff size={16} /> : <Eye size={16} />}
+                    </button>
                   </div>
                   {errors.password && (
                     <p className="text-[10px] text-rose-600 font-semibold mt-1 flex items-center gap-1">
@@ -511,18 +529,33 @@ export const ClientSignupModal: React.FC<ClientSignupModalProps> = ({
                       <Lock size={16} />
                     </span>
                     <input
-                      type="password"
+                      type={showPasswordConfirmation ? "text" : "password"}
                       name="password_confirmation"
                       value={formData.password_confirmation || ""}
                       onChange={handleInputChange}
                       placeholder="Digite a senha novamente"
                       disabled={isLoading}
-                      className={`w-full pl-10 pr-4 py-2.5 bg-slate-50/50 border rounded-2xl text-sm placeholder:text-slate-400/80 font-sans focus:outline-none focus:ring-2 transition-all ${
+                      className={`w-full pl-10 pr-10 py-2.5 bg-slate-50/50 border rounded-2xl text-sm placeholder:text-slate-400/80 font-sans focus:outline-none focus:ring-2 transition-all ${
                         errors.password_confirmation
                           ? "border-rose-350 focus:ring-rose-500/20 text-rose-900"
                           : "border-slate-200 focus:border-emerald-500 focus:ring-emerald-500/10 text-slate-900"
                       }`}
                     />
+                    <button
+                      type="button"
+                      tabIndex={-1}
+                      onClick={(e) => {
+                        e.preventDefault();
+                        setShowPasswordConfirmation(!showPasswordConfirmation);
+                      }}
+                      onMouseDown={(e) => {
+                        e.preventDefault();
+                      }}
+                      className="absolute inset-y-0 right-0 pr-3 flex items-center text-slate-400 hover:text-slate-600 transition focus:outline-none cursor-pointer"
+                      aria-label={showPasswordConfirmation ? "Ocultar confirmação de senha" : "Exibir confirmação de senha"}
+                    >
+                      {showPasswordConfirmation ? <EyeOff size={16} /> : <Eye size={16} />}
+                    </button>
                   </div>
                   {errors.password_confirmation && (
                     <p className="text-[10px] text-rose-600 font-semibold mt-1 flex items-center gap-1">
