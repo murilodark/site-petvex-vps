@@ -13,7 +13,7 @@ export async function registerClient(input: ClientRegisterInput): Promise<Client
     .replace(/[\u0300-\u036f]/g, "")
     .replace(/[^a-z0-9]/g, "");
 
-  const payload: any = {
+  const payload: ClientRegisterInput = {
     tenant_name: input.tenant_name,
     account_slug: cleanSlug,
     user_name: input.user_name,
@@ -22,7 +22,8 @@ export async function registerClient(input: ClientRegisterInput): Promise<Client
     email: input.email,
     password: input.password,
     password_confirmation: input.password_confirmation,
-    plan_id: input.plan_id
+    plan_id: input.plan_id,
+    firebase_id_token: input.firebase_id_token,
   };
 
   const response = await fetch(`${API_BASE_URL}/public/new-client`, {

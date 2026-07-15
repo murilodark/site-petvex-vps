@@ -8,7 +8,10 @@ export interface ClientRegisterInput {
   password: string;
   password_confirmation: string;
   plan_id?: number;
+  firebase_id_token: string;
 }
+
+export type ClientRegisterFormData = Omit<ClientRegisterInput, "firebase_id_token">;
 
 export interface ClientRegisterResponse {
   message: string;

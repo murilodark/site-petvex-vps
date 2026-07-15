@@ -5,6 +5,8 @@ import { ClientRegisterInput } from "../types/client";
 import { validateClientRegister, formatCPF, formatCNPJ, formatPhone, ValidationError } from "../schemas/client.schema";
 import { registerClient } from "../services/client.service";
 import { TermsOfServiceContent } from "../../../components/shared/TermsOfServiceContent";
+import { PhoneVerificationModal } from "./PhoneVerificationModal";
+import { sendVerificationCode, confirmCode, cleanupSession } from "../services/phone-verification.service";
 
 interface ClientSignupModalProps {
   isOpen: boolean;
@@ -43,8 +45,30 @@ export const ClientSignupModal: React.FC<ClientSignupModalProps> = ({
   const [apiError, setApiError] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [isSuccess, setIsSuccess] = useState(false);
+  const [isVerificationOpen, setIsVerificationOpen] = useState(false);
 
   if (!isOpen || !selectedPlan) return null;
+
+  const handleCloseAll = () => {
+    setFormData({
+      tenant_name: "",
+      account_slug: "",
+      user_name: "",
+      cpf: "",
+      phone: "",
+      email: "",
+      password: "",
+      password_confirmation: "",
+    });
+    setErrors({});
+    setApiError(null);
+    setAcceptedTerms(false);
+    setIsSlugManuallyEdited(false);
+    setIsVerificationOpen(false);
+    setIsSuccess(false);
+    cleanupSession();
+    onClose();
+  };
 
   const generateSlug = (text: string): string => {
     return text
@@ -120,6 +144,21 @@ export const ClientSignupModal: React.FC<ClientSignupModalProps> = ({
     setIsLoading(true);
 
     try {
+      // Send verification code via SMS
+      await sendVerificationCode(formData.phone!, "firebase-recaptcha-container");
+      setIsVerificationOpen(true);
+    } catch (err: any) {
+      console.error("SMS send error:", err);
+      setApiError(err.message || "Não foi possível enviar o código de verificação para o seu celular. Verifique o número.");
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const handleVerificationConfirm = async (code: string) => {
+    const token = await confirmCode(code);
+    
+    try {
       await registerClient({
         tenant_name: formData.tenant_name!,
         account_slug: formData.account_slug,
@@ -130,13 +169,15 @@ export const ClientSignupModal: React.FC<ClientSignupModalProps> = ({
         password: formData.password!,
         password_confirmation: formData.password_confirmation!,
         plan_id: selectedPlan.id,
+        firebase_id_token: token,
       });
 
+      setIsVerificationOpen(false);
       setIsSuccess(true);
+      cleanupSession();
     } catch (err: any) {
-      console.error("Signup error:", err);
+      console.error("API registration error:", err);
       if (err.errors) {
-        // Map API field errors
         const newErrors: ValidationError = {};
         Object.keys(err.errors).forEach((key) => {
           const messages = err.errors[key];
@@ -150,10 +191,20 @@ export const ClientSignupModal: React.FC<ClientSignupModalProps> = ({
         });
         setErrors(newErrors);
       }
-      setApiError(err.message || "Erro de conexão com o servidor. Tente novamente.");
-    } finally {
-      setIsLoading(false);
+      
+      const errMsg = err.message || "Erro ao realizar o cadastro. Por favor, verifique os dados.";
+      setApiError(errMsg);
+      throw new Error(errMsg);
     }
+  };
+
+  const handleVerificationResend = async () => {
+    await sendVerificationCode(formData.phone!, "firebase-recaptcha-container");
+  };
+
+  const handleVerificationBack = () => {
+    setIsVerificationOpen(false);
+    cleanupSession();
   };
 
   const handleGoToClientArea = () => {
@@ -161,14 +212,15 @@ export const ClientSignupModal: React.FC<ClientSignupModalProps> = ({
   };
 
   return (
-    <AnimatePresence>
+    <>
+      <AnimatePresence>
       <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
         {/* Backdrop overlay */}
         <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
-          onClick={isLoading ? undefined : onClose}
+          onClick={isLoading ? undefined : handleCloseAll}
           className="absolute inset-0 bg-slate-900/60 backdrop-blur-xs"
         />
 
@@ -183,7 +235,7 @@ export const ClientSignupModal: React.FC<ClientSignupModalProps> = ({
           {/* Header Close Button */}
           {!isLoading && (
             <button
-              onClick={onClose}
+              onClick={handleCloseAll}
               className="absolute top-5 right-5 p-2 rounded-full text-slate-400 hover:text-slate-600 hover:bg-slate-100 transition focus:outline-none z-20"
               aria-label="Fechar"
             >
@@ -657,6 +709,20 @@ export const ClientSignupModal: React.FC<ClientSignupModalProps> = ({
         </motion.div>
       </div>
     </AnimatePresence>
+
+    {/* Invisible reCAPTCHA container required by Firebase */}
+    <div id="firebase-recaptcha-container" className="hidden" />
+
+    {/* Phone Verification Modal */}
+    <PhoneVerificationModal
+      isOpen={isVerificationOpen}
+      phone={formData.phone || ""}
+      onConfirm={handleVerificationConfirm}
+      onResend={handleVerificationResend}
+      onBack={handleVerificationBack}
+      onClose={handleCloseAll}
+    />
+    </>
   );
 };
 

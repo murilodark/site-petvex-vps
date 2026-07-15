@@ -11,14 +11,15 @@ RSYNC_ARGS=(
   --checksum
 
   --include='/src/***'
-  --include='/index.html'
+
+  # --include='/index.html'
   --include='/metadata.json'
   --include='/orval.config.ts'
   # --include='/package-lock.json'
   --include='/package.json'
   --include='/tsconfig.json'
   --include='/vite.config.ts'
-
+ --exclude='/src/assets/***'
   --exclude='*'
 )
 
